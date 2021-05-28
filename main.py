@@ -14,6 +14,12 @@ ui = Ui_MainWindow()
 ui.setupUi(MainWindow)
 MainWindow.show()
 
+ui.time.setText("16.00-16.45 17.00-17.45")
+ui.form.setText("комбинированная")
+ui.duration.setText("2")
+ui.theme.setText("Программирование в Scratch")
+ui.location.setText("МАУ ДО ДДТ г. Можайска; Ул. Мира, д. 6а, каб. 10")
+ui.control.setText("Устный опрос, беседа, практическая проверка")
 
 def main():
     # С какого по какое число нужны даты
@@ -50,6 +56,11 @@ def main():
         days.append(5)
     if ui.sat.isChecked():
         days.append(6)
+
+    if not days:
+        print("не выбраны дни проведения занятия")
+        # TODO: сообщение в интерфейс
+        return None
 
     # Перевод месяцев на русский язык
     translation_dict = {
@@ -102,12 +113,12 @@ def main():
             location = ""
             control = ""
         else:
-            time = "16.00-16.45 17.00-17.45"
-            form = "комбинированная"
-            duration = "2"
-            theme = ""
-            location = "МАУ ДО ДДТ г. Можайска; Ул. Мира, д. 6а, каб. 10"
-            control = "Устный опрос, беседа, практическая проверка"
+            time = ui.time.toPlainText()
+            form = ui.form.toPlainText()
+            duration = ui.duration.toPlainText()
+            theme = ui.theme.toPlainText()
+            location = ui.location.toPlainText()
+            control = ui.control.toPlainText()
 
         line = (
             counter,
