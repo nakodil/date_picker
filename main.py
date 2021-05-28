@@ -1,6 +1,7 @@
 from docx import Document  # pip install python-docx 
 from datetime import datetime
 from dateutil.rrule import rrule, WEEKLY, MO, TH
+import holidays_parser
 
 # С какого по какое число нужны даты
 start_date = datetime(2021, 9, 1)
@@ -8,12 +9,6 @@ end_date = datetime(2022, 6, 1)
 
 # Известное содержимое ячеек
 counter = 1
-time = "16.00-16.45 17.00-17.45"
-form = "комбинированная"
-duration = "2"
-theme = ""
-location = "МАУ ДО ДДТ г. Можайска; Ул. Мира, д. 6а, каб. 10"
-control = "Устный опрос, беседа, практическая проверка"
 
 # Перевод месяцев на русский язык
 translation_dict = {
@@ -35,7 +30,7 @@ translation_dict = {
 document = Document()
 table = document.add_table(1, 9)
 table.style = 'Table Grid'
-9*8
+
 # Заполняем заголовки таблицы
 # TODO: Брать загловки из списка
 heading_cells = table.rows[0].cells
@@ -49,14 +44,32 @@ heading_cells[6].text = 'тема занятия'
 heading_cells[7].text = 'место проведения'
 heading_cells[8].text = 'форма контроля'
 
-
 for date in rrule(WEEKLY, byweekday=(MO, TH), dtstart=start_date, until=end_date):
     
     # Получаем кортеж из 9 элементов
+    month = translation_dict[date.strftime('%b')]
+    day = date.strftime('%d')
+    month_and_day = month + " " + day
+
+    if month_and_day in holidays_parser.holidays_list:
+        time = ""
+        form = ""
+        duration = ""
+        theme = "Праздничный день"
+        location = ""
+        control = ""
+    else:
+        time = "16.00-16.45 17.00-17.45"
+        form = "комбинированная"
+        duration = "2"
+        theme = ""
+        location = "МАУ ДО ДДТ г. Можайска; Ул. Мира, д. 6а, каб. 10"
+        control = "Устный опрос, беседа, практическая проверка"
+
     line = (
         counter,
-        translation_dict[date.strftime('%b')],
-        date.strftime('%d'),
+        month,
+        day,
         time,
         form,
         duration,
@@ -71,7 +84,7 @@ for date in rrule(WEEKLY, byweekday=(MO, TH), dtstart=start_date, until=end_date
     for item in line:
         cells[i].text = str(line[i])
         i += 1
-    
+
     counter += 1
 
 document.save('output.docx')
