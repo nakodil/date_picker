@@ -95,12 +95,19 @@ def main():
     heading_cells[6].text = 'тема занятия'
     heading_cells[7].text = 'место проведения'
     heading_cells[8].text = 'форма контроля'
-
+   
     # byweekday=(0, 3) понедельники и четверги
-    counter = 1
-    for date in rrule(WEEKLY, byweekday=(days), dtstart=start_date, until=end_date):
-        
-        # Получаем кортеж из 9 элементов
+    dates = rrule(WEEKLY, byweekday=(days), dtstart=start_date, until=end_date)
+    
+    # TODO: Как взять длину rrule?
+    days_counter = 0
+    for day in dates:
+        days_counter += 1
+    ui.progress.setMaximum(days_counter)
+    
+    counter = 1 # Номер первой ячейки каждого ряда
+
+    for date in dates:
         month = translation_dict[date.strftime('%b')]
         day = date.strftime('%d')
         month_and_day = month + " " + day
@@ -140,9 +147,13 @@ def main():
             i += 1
 
         counter += 1
+        ui.progress.setValue(counter)
+        QtTest.QTest.qWait(0)
 
     document.save('output.docx')
+    ui.progress.setValue(0)
 
+# TODO: Диалог выбора места сохраняемого файла.
 ui.make_file.clicked.connect(main)
 
 sys.exit(app.exec_())
