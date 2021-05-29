@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
+     <enum>Qt::LeftToRight</enum>
     </property>
     <property name="value">
      <number>0</number>
@@ -191,9 +191,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>140</y>
+      <y>130</y>
       <width>431</width>
-      <height>201</height>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
